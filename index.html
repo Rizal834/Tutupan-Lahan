@@ -22,7 +22,7 @@
             margin: 0;
         }
         </style>
-        <title>Tutupan Lahan di Surabaya</title>
+        <title>Tutupan Lahan Kota Surabaya</title>
     </head>
     <body>
         <div id="map">
@@ -42,9 +42,9 @@
         <script src="js/leaflet-measure.js"></script>
         <script src="js/leaflet-search.js"></script>
         <script src="data/DeliniasiSurabaya_2.js"></script>
+        <script src="data/Badanair_3.js"></script>
         <script src="data/kedapair_4.js"></script>
         <script src="data/vegetasi_5.js"></script>
-        <script src="data/Badanair_6.js"></script>
         <script>
         var highlightLayer;
         function highlightFeature(e) {
@@ -103,7 +103,7 @@
             return this._div;
         };
         title.update = function () {
-            this._div.innerHTML = '<h2>Tutupan Lahan di Surabaya</h2>';
+            this._div.innerHTML = '<h2>Tutupan Lahan Kota Surabaya</h2>';
         };
         title.addTo(map);
         var abstract = new L.Control({'position':'bottomleft'});
@@ -219,7 +219,7 @@
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(141,90,153,0.0)',
+                fillColor: 'rgba(255,255,255,1.0)',
                 interactive: true,
             }
         }
@@ -237,15 +237,72 @@
         });
         bounds_group.addLayer(layer_DeliniasiSurabaya_2);
         map.addLayer(layer_DeliniasiSurabaya_2);
-        map.createPane('pane_TutupanLahan_3');
-        map.getPane('pane_TutupanLahan_3').style.zIndex = 403;
-        var img_TutupanLahan_3 = 'data/TutupanLahan_3.png';
-        var img_bounds_TutupanLahan_3 = [[-7.351556574432679,112.59153000733781],[-7.191907443930502,112.84694215540418]];
-        var layer_TutupanLahan_3 = new L.imageOverlay(img_TutupanLahan_3,
-                                              img_bounds_TutupanLahan_3,
-                                              {pane: 'pane_TutupanLahan_3'});
-        bounds_group.addLayer(layer_TutupanLahan_3);
-        map.addLayer(layer_TutupanLahan_3);
+        function pop_Badanair_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (var i in e.target._eventParents) {
+                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
+                            e.target._eventParents[i].resetStyle(e.target);
+                        }
+                    }
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['gridcode'] !== null ? autolinker.link(feature.properties['gridcode'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Keterangan'] !== null ? autolinker.link(feature.properties['Keterangan'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_Badanair_3_0() {
+            return {
+                pane: 'pane_Badanair_3',
+                stroke: false, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(16,176,220,1.0)',
+                interactive: false,
+            }
+        }
+        map.createPane('pane_Badanair_3');
+        map.getPane('pane_Badanair_3').style.zIndex = 403;
+        map.getPane('pane_Badanair_3').style['mix-blend-mode'] = 'normal';
+        var layer_Badanair_3 = new L.geoJson(json_Badanair_3, {
+            attribution: '',
+            interactive: false,
+            dataVar: 'json_Badanair_3',
+            layerName: 'layer_Badanair_3',
+            pane: 'pane_Badanair_3',
+            onEachFeature: pop_Badanair_3,
+            style: style_Badanair_3_0,
+        });
+        bounds_group.addLayer(layer_Badanair_3);
+        map.addLayer(layer_Badanair_3);
         function pop_kedapair_4(feature, layer) {
             layer.on({
                 mouseout: function(e) {
@@ -294,7 +351,7 @@
                 stroke: false, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(250,199,126,1.0)',
+                fillColor: 'rgba(222,19,19,1.0)',
                 interactive: false,
             }
         }
@@ -360,7 +417,7 @@
                 stroke: false, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(23,132,57,1.0)',
+                fillColor: 'rgba(0,225,75,1.0)',
                 interactive: false,
             }
         }
@@ -378,72 +435,6 @@
         });
         bounds_group.addLayer(layer_vegetasi_5);
         map.addLayer(layer_vegetasi_5);
-        function pop_Badanair_6(feature, layer) {
-            layer.on({
-                mouseout: function(e) {
-                    for (var i in e.target._eventParents) {
-                        if (typeof e.target._eventParents[i].resetStyle === 'function') {
-                            e.target._eventParents[i].resetStyle(e.target);
-                        }
-                    }
-                    if (typeof layer.closePopup == 'function') {
-                        layer.closePopup();
-                    } else {
-                        layer.eachLayer(function(feature){
-                            feature.closePopup()
-                        });
-                    }
-                },
-                mouseover: highlightFeature,
-            });
-            var popupContent = '<table>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['OBJECTID'] !== null ? autolinker.link(feature.properties['OBJECTID'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['gridcode'] !== null ? autolinker.link(feature.properties['gridcode'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Shape_Area'] !== null ? autolinker.link(feature.properties['Shape_Area'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Keterangan'] !== null ? autolinker.link(feature.properties['Keterangan'].toLocaleString()) : '') + '</td>\
-                    </tr>\
-                </table>';
-            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
-			layer.on('popupopen', function(e) {
-				addClassToPopupIfMedia(content, e.popup);
-			});
-			layer.bindPopup(content, { maxHeight: 400 });
-        }
-
-        function style_Badanair_6_0() {
-            return {
-                pane: 'pane_Badanair_6',
-                stroke: false, 
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(214,25,28,1.0)',
-                interactive: false,
-            }
-        }
-        map.createPane('pane_Badanair_6');
-        map.getPane('pane_Badanair_6').style.zIndex = 406;
-        map.getPane('pane_Badanair_6').style['mix-blend-mode'] = 'normal';
-        var layer_Badanair_6 = new L.geoJson(json_Badanair_6, {
-            attribution: '',
-            interactive: false,
-            dataVar: 'json_Badanair_6',
-            layerName: 'layer_Badanair_6',
-            pane: 'pane_Badanair_6',
-            onEachFeature: pop_Badanair_6,
-            style: style_Badanair_6_0,
-        });
-        bounds_group.addLayer(layer_Badanair_6);
-        map.addLayer(layer_Badanair_6);
         var osmGeocoder = new L.Control.Geocoder({
             collapsed: true,
             position: 'topleft',
@@ -457,10 +448,9 @@
         var baseMaps = {};
         var overlaysTree = [
         {label: '<b>Tutupan Lahan</b>', selectAllCheckbox: true, children: [
-            {label: '<img src="legend/Badanair_6.png" /> Badan air', layer: layer_Badanair_6},
             {label: '<img src="legend/vegetasi_5.png" /> vegetasi', layer: layer_vegetasi_5},
             {label: '<img src="legend/kedapair_4.png" /> kedap air', layer: layer_kedapair_4},
-            {label: "Tutupan Lahan", layer: layer_TutupanLahan_3},]},
+            {label: '<img src="legend/Badanair_3.png" /> Badan air', layer: layer_Badanair_3},]},
             {label: '<img src="legend/DeliniasiSurabaya_2.png" /> Deliniasi Surabaya', layer: layer_DeliniasiSurabaya_2},
             {label: "Peta Dasar", layer: layer_PetaDasar_1},
             {label: "Google Satellite", layer: layer_GoogleSatellite_0},]
@@ -482,10 +472,15 @@
             propertyName: 'Kecamatan'}));
         document.getElementsByClassName('search-button')[0].className +=
          ' fa fa-binoculars';
-        L.ImageOverlay.include({
-            getBounds: function () {
-                return this._bounds;
-            }
+        resetLabels([layer_DeliniasiSurabaya_2]);
+        map.on("zoomend", function(){
+            resetLabels([layer_DeliniasiSurabaya_2]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_DeliniasiSurabaya_2]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_DeliniasiSurabaya_2]);
         });
         </script>
     </body>
